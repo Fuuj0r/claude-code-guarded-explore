@@ -1,10 +1,18 @@
 # Guarded Explore
 
-A drop-in replacement for Claude Code's built-in **Explore** subagent:
-- **It runs on Haiku** instead of your main session's model.
-- **It keeps a shell**, but a guard lets that shell only list files and read git history.
+A drop-in replacement for Claude Code's built-in **Explore** subagent. Tested head to head against the built-in, it gave answers as good, at about **a seventieth of the usage per search**, with a safer shell.
 
-Tested head to head against the built-in, it gave answers as good, at about **a seventieth of the usage per search**, with a safer shell.
+## The problem it solves
+
+When Claude Code needs to search a codebase, it usually hands the job to its built-in Explore subagent. That subagent runs on your main session's model. If you work on Opus, every search runs on Opus; under a Fable session on a subscription, Explore runs on Opus too. Searches happen a lot, so this adds up. Several GitHub issues asked for a setting to change it, and they were closed without one.
+
+Claude Code's documentation gives the fix: create your own agent named `Explore`, which replaces the built-in and keeps its own `model:` line. The version usually shared does exactly that with only Read, Grep and Glob. In our tests, that no-shell version:
+- missed files inside **git-ignored folders**: Grep skips them by design, and in a large folder Glob's 100-result limit cut them off;
+- answered **git history** questions, such as "which commit last changed this file?", less than half the time (4 of 9).
+
+The built-in does both, with its shell. So Guarded Explore:
+- **runs on Haiku** instead of your main session's model;
+- **keeps a shell**, but a guard lets that shell only list files and read git history.
 
 > **Windows only for now.** It's tested on Windows 11. Don't install it on macOS, Linux or WSL yet: there, Claude Code gives a subagent its Grep and Glob tools only if it has no shell, so this agent couldn't search file contents. The installer stops on those systems. See [Limits](#limits).
 
@@ -88,16 +96,6 @@ This agent combines what those miss:
 
   The history is in [docs/GUARD.md](docs/GUARD.md).
 - **Evidence:** the published comparisons we found tested one easy lookup a handful of times, or three inventory questions, 36 runs in all. None tested git-ignored folders, git history, planted instructions or secrets. This one did.
-
-## The problem it solves
-
-When Claude Code needs to search a codebase, it usually hands the job to its built-in Explore subagent. That subagent runs on your main session's model. If you work on Opus, every search runs on Opus; under a Fable session on a subscription, Explore runs on Opus too. Searches happen a lot, so this adds up. Several GitHub issues asked for a setting to change it, and they were closed without one.
-
-Claude Code's documentation gives the fix: create your own agent named `Explore`, which replaces the built-in and keeps its own `model:` line. The version usually shared does exactly that with only Read, Grep and Glob. In our tests, that no-shell version:
-- missed files inside **git-ignored folders**: Grep skips them by design, and in a large folder Glob's 100-result limit cut them off;
-- answered **git history** questions, such as "which commit last changed this file?", less than half the time (4 of 9).
-
-The built-in does both, with its shell. So this agent keeps a shell too, behind a guard.
 
 ## Results in more detail
 
