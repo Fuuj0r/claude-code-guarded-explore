@@ -69,6 +69,6 @@ Every one of those bypasses is a test in `tests/test_shell_guard.py`, alongside 
 
 ## Found a way round it?
 
-Please report it privately, so it can be fixed before it's public: on this repository's **Security** tab, choose **Report a vulnerability**. If that option isn't there, open an issue that only says you've found one, without the details, and you'll be contacted.
+Please report it privately, so it can be fixed before it's public: on this repository's **Security and quality** tab (**Security** on older screens), choose **Report a vulnerability**. If that option isn't there, open an issue that only says you've found one, without the details, and you'll be contacted. [SECURITY.md](../SECURITY.md) has what to include.
 
 Once it's fixed, the command goes into `tests/test_shell_guard.py` as a new case: it fails against the old guard and passes against the fixed one.
